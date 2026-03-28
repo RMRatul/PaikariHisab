@@ -1,0 +1,226 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id               String        @id @default(cuid())
+  code             String?       @unique
+  name             String
+  phone            String        @unique
+  shopName         String?
+  shopAddress      String?
+  ownerName        String?
+  permanentAddress String?
+  dueBalance       Float         @default(0) // Positive means they owe us
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  sales            Sale[]
+  returns          Return[]
+  transactions     Transaction[]
+
+  @@index([name])
+  @@index([shopName])
+}
+
+model Supplier {
+  id           String        @id @default(cuid())
+  name         String
+  phone        String        @unique
+  company      String?
+  address      String?
+  dueBalance   Float         @default(0) // Positive means we owe them
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  purchases    Purchase[]
+  transactions Transaction[]
+
+  @@index([name])
+  @@index([company])
+}
+
+model Product {
+  id            String         @id @default(cuid())
+  code          String         @unique
+  name          String
+  category      String
+  purchasePrice Float          @default(0)
+  sellingPrice  Float          @default(0)
+  stock         Int            @default(0)
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  saleItems     SaleItem[]
+  purchaseItems PurchaseItem[]
+  returnItems   ReturnItem[]
+
+  @@index([name])
+  @@index([category])
+}
+
+model Sale {
+  id           String     @id @default(cuid())
+  memoNo       String     @unique // e.g. INV-1001
+  customerId   String
+  customer     Customer   @relation(fields: [customerId], references: [id])
+  date         DateTime   @default(now())
+  subTotal     Float
+  discount     Float      @default(0)
+  totalAmount  Float
+  paidAmount   Float
+  dueAdded     Float      @default(0)
+  courierName  String?
+  courierBilty String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  items        SaleItem[]
+
+  @@index([customerId])
+  @@index([date])
+}
+
+model SaleItem {
+  id        String   @id @default(cuid())
+  saleId    String
+  sale      Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float    // Selling Price
+  costPrice Float    // Purchase Price at time of sale (for accurate P&L)
+  createdAt DateTime @default(now())
+
+  @@index([saleId])
+  @@index([productId])
+}
+
+model Purchase {
+  id             String         @id @default(cuid())
+  invoiceNo      String? // Supplier's invoice number
+  supplierId     String
+  supplier       Supplier       @relation(fields: [supplierId], references: [id])
+  date           DateTime       @default(now())
+  totalAmount    Float
+  discount       Float          @default(0)
+  paidAmount     Float
+  dueAdded       Float          @default(0)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  items          PurchaseItem[]
+
+  @@index([supplierId])
+  @@index([date])
+}
+
+model PurchaseItem {
+  id         String   @id @default(cuid())
+  purchaseId String
+  purchase   Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  quantity   Int
+  price      Float
+  createdAt  DateTime @default(now())
+
+  @@index([purchaseId])
+  @@index([productId])
+}
+
+model Return {
+  id          String       @id @default(cuid())
+  customerId  String
+  customer    Customer     @relation(fields: [customerId], references: [id])
+  date        DateTime     @default(now())
+  totalAmount Float // Total value refunded/deducted from due
+  reason      String?
+  createdAt   DateTime     @default(now())
+  items       ReturnItem[]
+
+  @@index([customerId])
+}
+
+model ReturnItem {
+  id          String   @id @default(cuid())
+  returnId    String
+  return      Return   @relation(fields: [returnId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+  quantity    Int
+  refundPrice Float
+  createdAt   DateTime @default(now())
+
+  @@index([returnId])
+  @@index([productId])
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  type        String // "IN" (Collection) or "OUT" (Payment)
+  partyType   String // "CUSTOMER" or "SUPPLIER"
+  partyId     String // customerId or supplierId
+  amount      Float
+  discount    Float    @default(0) // E.g., settling due with a small waiver
+  method      String // "CASH", "BANK", "MOBILE_BANKING"
+  date        DateTime @default(now())
+  description String?
+  createdAt   DateTime @default(now())
+  
+  // Relations are optional here since partyType decides, but useful to link
+  customer    Customer? @relation(fields: [customId], references: [id])
+  customId    String?
+  supplier    Supplier? @relation(fields: [suppId], references: [id])
+  suppId      String?
+
+  @@index([partyId])
+  @@index([customId])
+  @@index([suppId])
+  @@index([date])
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  categoryId  String
+  category    ExpenseCategory @relation(fields: [categoryId], references: [id])
+  amount      Float
+  date        DateTime @default(now())
+  description String?
+  createdAt   DateTime @default(now())
+
+  @@index([categoryId])
+  @@index([date])
+}
+
+model ExpenseCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  expenses    Expense[]
+  createdAt   DateTime @default(now())
+}
+
+model User {
+  id               String    @id @default(cuid())
+  name             String?
+  username         String    @unique
+  email            String?   @unique
+  emailVerified    DateTime?
+  password         String
+  role             String    @default("ADMIN") // ADMIN, STAFF
+  isDefaultPassword Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  passwordHistory  PasswordHistory[]
+}
+
+model PasswordHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}

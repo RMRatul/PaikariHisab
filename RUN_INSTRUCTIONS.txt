@@ -1,0 +1,41 @@
+=====================================================
+    Wholesale ERP System - "Plug & Play" Instructions
+=====================================================
+
+This project is a FULLY PORTABLE bundle. No internet is required on the new PC.
+Everything is pre-built and ready to run.
+
+-----------------------------------------------------
+1. NEW PC SETUP (অন্য পিসিতে যা করবেন)
+-----------------------------------------------------
+1. Copy the entire 'wholesale-erp-copy' folder to the new PC.
+2. If the new PC does NOT have Node.js installed:
+   - Double-click and install the included file:
+     'node-v22.14.0-x64.msi'
+   - (Follow the default setup prompts).
+
+-----------------------------------------------------
+2. HOW TO RUN (কিভাবে চালাবেন)
+-----------------------------------------------------
+1. Open the project folder.
+2. Double-click on 'start-app.bat'.
+3. The app will start automatically in a few seconds.
+4. Your browser will open at: http://localhost:3000
+
+-----------------------------------------------------
+3. LOGIN CREDENTIALS (লগইন তথ্য)
+-----------------------------------------------------
+A fresh Admin account has been created for you:
+- Username: admin
+- Password: admin123
+
+-----------------------------------------------------
+4. IMPORTANT NOTES (জরুরি কথা)
+-----------------------------------------------------
+- Keep the 'server' window minimized while using the app.
+- Do NOT delete the 'node_modules' folder, it is needed for the app to run offline.
+- Everything is pre-configured, you don't need to run any commands.
+
+=====================================================
+    ধন্যবাদ / Thank You
+=====================================================
