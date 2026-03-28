@@ -1,40 +1,69 @@
-# Wholesale ERP
+# Wholesale ERP System (বারাকাহ ক্লথ স্টোর)
 
-A comprehensive Grossery/Wholesale Enterprise Resource Planning system built with Next.js, Prisma, and TailwindCSS.
+A comprehensive Wholesale Enterprise Resource Planning system built with Next.js App Router, Prisma, and TailwindCSS, designed specifically for rapid and secure data entry with complete localization in Bengali.
 
-## Features
+## Key Features
 - **Dashboard Overview**: Detailed statistics for sales, purchases, and low-stock items.
 - **Inventory Management**: Track products accurately.
-- **Sales & Purchases**: Dynamic invoice creation and ledger generation.
-- **Reports**: Daily, monthly, and yearly reports at your fingertips.
-- **Localization**: Full support for Bengali language & formatting.
+- **Customers & Suppliers Ledgers**: Track balances, transactions, and payments.
+- **Sales & Purchases**: Dynamic invoice creation and ledger tracking.
+- **Returns & Expenses**: Log incoming defective items and outgoing business expenses.
+- **Reports**: Generate daily, monthly, and yearly business overview reports.
+- **Localization**: Full support for Bengali language & number formatting.
 
-## Screenshots
-*(Add screenshots below into the `public/screenshots/` folder to display them here)*
+---
 
-### Dashboard
+## System Screenshots
+
+Here is a full breakdown of the application interfaces:
+
+### 1. 📊 Dashboard
 ![Dashboard](public/screenshots/dashboard.png)
 
-### Inventory
+### 2. 👥 Customers (কাস্টমার)
+![Customers](public/screenshots/customers.png)
+
+### 3. 🏢 Suppliers (মহাজন)
+![Suppliers](public/screenshots/suppliers.png)
+
+### 4. 📦 Inventory (স্টক/মালামাল)
 ![Inventory](public/screenshots/inventory.png)
 
-### Sales Invoice
+### 5. 🛒 Sales (বিল/মেমো)
 ![Sales](public/screenshots/sales.png)
 
-## Getting Started
+### 6. 🔄 Returns (মাল ফেরত)
+![Returns](public/screenshots/returns.png)
 
-To run the project locally, just run:
+### 7. 📥 Purchases (ক্রয়)
+![Purchases](public/screenshots/purchases.png)
 
-```bash
-start-app.bat
-```
+### 8. 💸 Expenses (খরচ)
+![Expenses](public/screenshots/expenses.png)
 
-Login as Admin:
+### 9. 📈 Reports (রিপোর্ট)
+![Reports](public/screenshots/reports.png)
+
+### 10. ⚙️ Settings (সেটিংস)
+![Settings](public/screenshots/settings.png)
+
+---
+
+## 🚀 Getting Started Locally
+
+This repo is structured as a portable bundle. You don't need continuous internet access.
+
+To spin up the server:
+1. Double-click `start-app.bat`
+2. Wait a few seconds for the Node server to compile and start.
+3. The app will open at `http://localhost:3000`
+
+### 🔑 Login Credentials:
 - **Username**: `admin`
 - **Password**: `admin123`
 
-## Tech Stack
-- Next.js (App Router)
-- React Hook Form
-- Prisma ORM
-- TailwindCSS & shadcn/ui
+## 🛠 Tech Stack
+- **Framework**: Next.js 16 (App Router)
+- **Database ORM**: Prisma
+- **Styling**: TailwindCSS, Shadcn/UI
+- **Icons**: Lucide React

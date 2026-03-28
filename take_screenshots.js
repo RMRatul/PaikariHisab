@@ -1,4 +1,6 @@
 const puppeteer = require('puppeteer-core');
+const fs = require('fs');
+const path = require('path');
 
 (async () => {
   const browser = await puppeteer.launch({ 
@@ -6,7 +8,7 @@ const puppeteer = require('puppeteer-core');
     executablePath: 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe'
   });
   const page = await browser.newPage();
-  await page.setViewport({ width: 1280, height: 800 });
+  await page.setViewport({ width: 1440, height: 900 });
 
   console.log('Navigating to login...');
   await page.goto('http://localhost:3000/login');
@@ -19,21 +21,31 @@ const puppeteer = require('puppeteer-core');
     page.waitForNavigation({ waitUntil: 'networkidle0' })
   ]);
   
-  console.log('Logged in. Capturing Dashboard...');
-  // Wait a bit for charts/data to load
-  await new Promise(r => setTimeout(r, 2000));
-  await page.screenshot({ path: 'public/screenshots/dashboard.png', fullPage: true });
+  const pagesToCapture = [
+    { route: '/', name: 'dashboard' },
+    { route: '/customers', name: 'customers' },
+    { route: '/suppliers', name: 'suppliers' },
+    { route: '/inventory', name: 'inventory' },
+    { route: '/sales', name: 'sales' },
+    { route: '/returns', name: 'returns' },
+    { route: '/purchases', name: 'purchases' },
+    { route: '/expenses', name: 'expenses' },
+    { route: '/reports', name: 'reports' },
+    { route: '/settings', name: 'settings' }
+  ];
 
-  console.log('Navigating to Inventory...');
-  await page.goto('http://localhost:3000/dashboard/inventory', { waitUntil: 'networkidle0' });
-  await new Promise(r => setTimeout(r, 1000));
-  await page.screenshot({ path: 'public/screenshots/inventory.png', fullPage: true });
+  for (const item of pagesToCapture) {
+    console.log(`Capturing ${item.name}...`);
+    try {
+      await page.goto(`http://localhost:3000${item.route}`, { waitUntil: 'networkidle0' });
+      // Wait for any data fetching/animations to complete
+      await new Promise(r => setTimeout(r, 2000));
+      await page.screenshot({ path: `public/screenshots/${item.name}.png`, fullPage: false }); // Disable fullpage so the sidebar stays neat
+    } catch (err) {
+      console.log(`Failed to capture ${item.name}: ${err.message}`);
+    }
+  }
 
-  console.log('Navigating to Sales...');
-  await page.goto('http://localhost:3000/dashboard/sales', { waitUntil: 'networkidle0' });
-  await new Promise(r => setTimeout(r, 1000));
-  await page.screenshot({ path: 'public/screenshots/sales.png', fullPage: true });
-
-  console.log('Done!');
+  console.log('All screenshots captured!');
   await browser.close();
 })();
