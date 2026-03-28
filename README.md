@@ -49,6 +49,25 @@ Here is a full breakdown of the application interfaces:
 
 ---
 
+## 🔥 Deep Functionality & Generated Documents
+
+### 🧾 Generating a Sale Memo (বিল তৈরি)
+![New Sale](public/screenshots/new-sale.png)
+
+### 📄 Generated PDF Memo / Invoice
+![Sale Memo PDF](public/screenshots/sale-memo.png)
+
+### 📙 Customer Ledger Details (কাস্টমারের হিসাব)
+![Customer Ledger](public/screenshots/customer-ledger.png)
+
+### 📥 New Purchase Entry (নতুন ক্রয়)
+![New Purchase](public/screenshots/new-purchase.png)
+
+### 👤 Adding a New Customer
+![New Customer](public/screenshots/new-customer.png)
+
+---
+
 ## 🚀 Getting Started Locally
 
 This repo is structured as a portable bundle. You don't need continuous internet access.
